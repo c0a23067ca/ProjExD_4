@@ -242,6 +242,40 @@ class Score:
         screen.blit(self.image, self.rect)
 
 
+#featuer5
+class Shield(pg.sprite.Sprite):
+    
+    def __init__(self, bird: Bird, life: int):
+        
+        super().__init__()
+        width = 20
+        height = bird.rect.height * 2
+        
+        self.image = pg.Surface((width, height), pg.SRCALPHA)
+        
+        pg.draw.rect(self.image, (0, 0, 255), (0, 0, width, height))
+        
+        vx, vy = bird.dire
+        
+        angle = math.degrees(math.atan2(-vy, vx))
+        
+        self.image = pg.transform.rotate(self.image, angle)
+        
+        self.rect = self.image.get_rect()
+
+        self.rect.centerx = bird.rect.centerx + vx * bird.rect.width
+        self.rect.centery = bird.rect.centery + vy * bird.rect.height
+        
+        self.life = life
+
+    def update(self):
+        self.life -= 1
+        if self.life < 0:
+            self.kill()
+
+
+
+
 def main():
     pg.display.set_caption("真！こうかとん無双")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -253,6 +287,7 @@ def main():
     beams = pg.sprite.Group()
     exps = pg.sprite.Group()
     emys = pg.sprite.Group()
+    shields = pg.sprite.Group()  #防御壁
 
     tmr = 0
     clock = pg.time.Clock()
@@ -282,6 +317,17 @@ def main():
             exps.add(Explosion(bomb, 50))  # 爆発エフェクト
             score.value += 1  # 1点アップ
 
+        #変更点
+        if key_lst[pg.K_s] and score.value >= 50 and len(shields) == 0:
+            shields.add(Shield(bird, 400))
+            score.value -= 50
+            
+        #変更点
+        for bomb in pg.sprite.groupcollide(bombs, shields, True, False).keys():
+            exps.add(Explosion(bomb, 50))
+
+
+
         if len(pg.sprite.spritecollide(bird, bombs, True)) != 0:
             bird.change_img(8, screen) # こうかとん悲しみエフェクト
             score.update(screen)
@@ -298,6 +344,8 @@ def main():
         bombs.draw(screen)
         exps.update()
         exps.draw(screen)
+        shields.update()  # 防御壁の更新
+        shields.draw(screen)  # 防御壁の描画
         score.update(screen)
         pg.display.update()
         tmr += 1
