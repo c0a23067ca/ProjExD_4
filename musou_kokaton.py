@@ -323,7 +323,8 @@ def main():
             score.value -= 50
             
         #変更点
-        for bomb in pg.sprite.groupcollide(bombs, shields, True, False).keys():
+        for bomb in pg.sprite.groupcollide(bombs, 
+        shields, True, False).keys():
             exps.add(Explosion(bomb, 50))
 
 
