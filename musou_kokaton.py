@@ -269,6 +269,36 @@ class Score:
         screen.blit(self.image, self.rect)
 
 
+class EMP(pg.sprite.Sprite):
+    
+    """
+    EMPを初期化し敵機と爆弾を無効化する
+    """
+    def __init__(self,enemies,bombs,screen):
+       super().__init__()
+       self.enemies = enemies
+       self.bombs = bombs
+       self.screen = screen
+       self.effect_time = 0.05
+    
+    def update(self):
+        for enemy in self.enemies:
+            enemy.interval = float('inf')
+            enemy.image = pg.transform.laplacian(enemy.image)
+            enemy.image.set_colorkey((0,0,0))
+        
+        for bomb in self.bombs:
+            bomb.speed /= 2
+            bomb.state = "inactive"
+
+        yellow_square = pg.Surface((WIDTH,HEIGHT))
+        yellow_square.fill((255,255,0))
+        yellow_square.set_alpha(128)
+        self.screen.blit(yellow_square,(0,0))
+        pg.display.update()
+        time.sleep(self.effect_time)
+
+
 def main():
     pg.display.set_caption("真！こうかとん無双")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -294,7 +324,9 @@ def main():
                     beams.add(neobeam.gen_beams(bird,num))     #ビームを複数発射
             elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 beams.add(Beam(bird))
-
+            if event.type == pg.KEYDOWN and event.key == pg.K_e and score.value >= 20:
+                EMP(enemies=emys, bombs=bombs, screen=screen).update()
+                score.value -= 20
         screen.blit(bg_img, [0, 0])
 
         if tmr%200 == 0:  # 200フレームに1回，敵機を出現させる
