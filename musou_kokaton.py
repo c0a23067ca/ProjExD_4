@@ -359,7 +359,6 @@ def main():
                     beams.add(neobeam.gen_beams(bird,num))     #ビームを複数発射
             elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 beams.add(Beam(bird))
-<<<<<<< HEAD
             if event.type == pg.KEYDOWN and event.key == pg.K_e and score.value >= 20:
                 EMP(enemies=emys, bombs=bombs, screen=screen).update()
                 score.value -= 20
@@ -368,9 +367,7 @@ def main():
                 score.value -= 20
                 gravity.add(Gravity(400))
                 
-=======
             
->>>>>>> C0B23041/feature1
         screen.blit(bg_img, [0, 0])
 
         if tmr%200 == 0:  # 200フレームに1回，敵機を出現させる
@@ -391,11 +388,9 @@ def main():
             exps.add(Explosion(bomb, 50))  # 爆発エフェクト
             score.value += 1  # 1点アップ
 
-<<<<<<< HEAD
         for bomb in pg.sprite.groupcollide(bombs, gravity, True, False).keys():
             exps.add(Explosion(bomb, 50))  # 爆発エフェクト
             score.value += 1  # 1点アップ
-=======
         if len(pg.sprite.spritecollide(bird, bombs, True)) != 0:
             bird.change_img(8, screen) # こうかとん悲しみエフェクト
             score.update(screen)
@@ -404,7 +399,6 @@ def main():
             return
         
     
->>>>>>> C0B23041/feature1
 
         for emy in pg.sprite.groupcollide(emys, gravity, True, False).keys():
             exps.add(Explosion(emy, 100))  # 爆発エフェクト
