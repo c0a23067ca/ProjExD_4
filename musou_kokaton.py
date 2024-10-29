@@ -102,10 +102,10 @@ class Bird(pg.sprite.Sprite):
         if not (sum_mv[0] == 0 and sum_mv[1] == 0):
             self.dire = tuple(sum_mv)
             self.image = self.imgs[self.dire]
-        if key_lst[pg.K_RSHIFT] and score.value >= 100 and self.state == "normal":
+        if key_lst[pg.K_RSHIFT] and score.value >= 10 and self.state == "normal":
             self.state = "hyper"
             self.hyper_life = 500
-            score.value -= 100
+            score.value -= 10
         if self.state == "hyper":
             self.image = pg.transform.laplacian(self.image)
             self.hyper_life -= 1
@@ -436,14 +436,6 @@ def main():
         shields, True, False).keys():
             exps.add(Explosion(bomb, 50))
 
-
-
-        if len(pg.sprite.spritecollide(bird, bombs, True)) != 0:
-            bird.change_img(8, screen) # こうかとん悲しみエフェクト
-            score.update(screen)
-            pg.display.update()
-            time.sleep(2)
-            return
         
     
 
